@@ -1,0 +1,22 @@
+# Blender 3.3.0 MTL File: 'dark memes remastered.blend'
+# www.blender.org
+
+newmtl Floor
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd -s 10 10 10 tiles.jpg
+
+newmtl Walls
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd -s 2 2 2 walls.png
