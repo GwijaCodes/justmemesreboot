@@ -1,4 +1,4 @@
-let x, y, enemyDist;
+let x, y, skyR, enemyDist, count;
 
 function preload() {
   sky = loadImage('./assets/sky.png')
@@ -13,9 +13,12 @@ function preload() {
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight, WEBGL);
   x = 0;
-  y = 0;
+  y = -90;
   z = 0;
+  skyR = 0;
   enemyDist = -300
+
+  count = 0;
   charR = radians(0);
   capture = createCapture(VIDEO);
   capture.size(320, 240);
@@ -28,18 +31,21 @@ function draw() {
 
   //scene
   push()
-  rotateY(radians(-y * 6))
+  rotateY(radians(-y))
   noStroke()
   //stage
   push()
-  rotateY(radians(180))
   scale(1, .8, 1)
+  rotateY(radians(-180))
   texture(img)
   model(stage)
   pop()
   //skybox
+  push()
   texture(sky)
+  rotateY(radians(skyR++ / 10))
   box(width * 6, width * 6, width * 6)
+  pop()
   pop()
 
   //character
@@ -53,7 +59,7 @@ function draw() {
 
   //ENEMIES
   push()
-  rotateY(radians(-y * 6))
+  rotateY(radians(-y))
 
   //enemy north
   push()
@@ -72,6 +78,7 @@ function draw() {
 
   pop()
 
+  enemyDist = enemyDist + .1
 
   //webcam
   // push()
@@ -98,20 +105,7 @@ function draw() {
   line(0, -20, 0, 0, -25, -800)
 
 
-  //player movements
-  if (keyIsPressed) {
 
-    if (keyCode === LEFT_ARROW || key === 'a') {
-      y++
-      charR = radians(10)
-    } else if (keyCode === RIGHT_ARROW || key === 'd') {
-      y--
-      charR = radians(-10)
-    }
-    else {
-      charR = radians(0);
-    }
-  }
 
   //game camera
   // camera(10, -50, 100, 20, -40, 0)
@@ -119,6 +113,25 @@ function draw() {
   //editing camera
   camera(10, -50, 100, 20, -40, 0)
 
+  //player movements
+  console.log(y)
+  y = y + count * 8;
+
+} //closing draw
+
+function keyPressed() {
+  if (keyCode === LEFT_ARROW || key === 'a' && y != 0) {
+    count++
+    setTimeout(() => { y = 0; count = 0 }, 200)
+    charR = radians(10)
+  } else if (keyCode === RIGHT_ARROW || key === 'd' && y != -90) {
+    count--
+    setTimeout(() => { y = -90; count = 0 }, 200)
+
+    charR = radians(-10)
+  } else if (key === 'k') {
+    enemyDist = -300
+  }
 }
 
 function windowResized() {
