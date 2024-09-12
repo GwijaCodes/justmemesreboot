@@ -1,11 +1,13 @@
-let x, y, skyR, enemyDist, count;
+let x, y, skyR, charTex, enemyDist, enemyDist1, count, facing;
 
 function preload() {
-  sky = loadImage('./assets/sky.png')
+  sky = loadImage('./assets/skybox.png')
   img = loadImage('./assets/tiles.jpg')
-  steve = loadImage('./assets/chark.jpg')
+  idle = loadImage('./assets/chark.jpg')
+  attack = loadImage('./assets/attack.gif')
   enemy = loadImage('./assets/enemy.png')
   enemy1 = loadImage('./assets/enemy1.png')
+  skybox = loadModel('./assets/skybox.obj')
   char = loadModel('./assets/char.obj')
   stage = loadModel('./assets/stage.obj')
 }
@@ -16,7 +18,10 @@ function setup() {
   y = -90;
   z = 0;
   skyR = 0;
-  enemyDist = -300
+  charTex = idle;
+  enemyDist = -300;
+  enemyDist1 = -300;
+  facing = 'east';
 
   count = 0;
   charR = radians(0);
@@ -35,7 +40,7 @@ function draw() {
   noStroke()
   //stage
   push()
-  scale(1, .8, 1)
+  scale(1, .4, 1)
   rotateY(radians(-180))
   texture(img)
   model(stage)
@@ -43,14 +48,15 @@ function draw() {
   //skybox
   push()
   texture(sky)
+  scale(10)
   rotateY(radians(skyR++ / 10))
-  box(width * 6, width * 6, width * 6)
+  model(skybox)
   pop()
-  pop()
+  pop()//closing scene
 
-  //character
+  //player
   push()
-  texture(steve)
+  texture(charTex)
   rotateY(charR)
   translate(0, -13)
   box(15, 30, 2)
@@ -72,13 +78,14 @@ function draw() {
   push()
   texture(enemy1)
   rotateY(radians(-90)) //this changes which tunnel the enemy comes from
-  translate(0, -30, enemyDist)
+  translate(0, -30, enemyDist1)
   box(90, 60, 20)
   pop()
 
   pop()
 
-  enemyDist = enemyDist + .1
+  enemyDist = enemyDist + .3
+  enemyDist1 = enemyDist1 + .1
 
   //webcam
   // push()
@@ -102,7 +109,7 @@ function draw() {
   //attack beam
   stroke(255, 255, 0)
   strokeWeight(4)
-  line(0, -20, 0, 0, -25, -800)
+  // line(0, -20, 0, 0, -25, -800)
 
 
 
@@ -111,26 +118,30 @@ function draw() {
   // camera(10, -50, 100, 20, -40, 0)
 
   //editing camera
-  camera(10, -50, 100, 20, -40, 0)
+  camera(10, -50, 90, 20, -40, 0)
 
   //player movements
-  console.log(y)
-  y = y + count * 8;
+  console.log(facing)
+  y = y + count * 7;
 
 } //closing draw
 
 function keyPressed() {
   if (keyCode === LEFT_ARROW || key === 'a' && y != 0) {
     count++
-    setTimeout(() => { y = 0; count = 0 }, 200)
+    setTimeout(() => { y = 0; count = 0; facing = 'north' }, 200)
     charR = radians(10)
   } else if (keyCode === RIGHT_ARROW || key === 'd' && y != -90) {
     count--
-    setTimeout(() => { y = -90; count = 0 }, 200)
+    setTimeout(() => { y = -90; count = 0; facing = 'east' }, 200)
 
     charR = radians(-10)
-  } else if (key === 'k') {
-    enemyDist = -300
+  }
+  if (key === 'k') {
+    charTex = attack
+    setTimeout(() => { charTex = idle }, 1000)
+
+    facing == 'north' ? enemyDist = -300 : enemyDist1 = -300
   }
 }
 
